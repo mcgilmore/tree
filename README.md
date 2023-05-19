@@ -7,6 +7,7 @@ Helps create phylogenetic tree showing distribution of a protein in bacterial sp
 3. Create an iTOL tree using the included **"OrthoDBv11_tree.txt"** file.
 4. Open the tree, and navigate to the "Datasets" tab. Select "Upload annotation file" and navigate to the dataset file created by the script.
 5. Adjust the tree and aesthetics to your preferences.
+6. Publish in Nature, Science or Cell
 
 
  
