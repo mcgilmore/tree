@@ -12,7 +12,8 @@ class OrthoDBGUI(QMainWindow):
 
         layout = QVBoxLayout()
 
-        label = QLabel("Enter OrthoDB Group ID:")
+        label = QLabel("Enter <a href=\"https://www.orthodb.org/\">OrthoDB v11</a> Group ID:")
+        label.setOpenExternalLinks(True)
         layout.addWidget(label)
 
         self.text_edit = QLineEdit()
@@ -29,13 +30,13 @@ class OrthoDBGUI(QMainWindow):
     def run_curl_command(self, curl_command):
         try:
             result = subprocess.check_output(curl_command, shell=True, stderr=subprocess.STDOUT)
-            return result.decode('utf-8').split("\n", 3)[-1]  # Convert bytes to string
+            return result.decode('utf-8').split("\n", 3)[-1]
         except subprocess.CalledProcessError as e:
             print(f"Error executing curl command: {e.output.decode('utf-8')}")
             return None
 
     def retrieve_organism_names(self):
-        group_id = self.text_edit.text()
+        group_id = self.text_edit.text().strip()
 
         curl_command = f'curl -X GET "https://data.orthodb.org/current/tab?id={group_id}"'
         response = self.run_curl_command(curl_command)
@@ -51,7 +52,7 @@ class OrthoDBGUI(QMainWindow):
             organism_names = []
             for row in reader:
                 if len(row) >= 5:
-                    organism_name = row[4]  # Column 5 (0-based index)
+                    organism_name = row[4]
                     organism_name = organism_name.replace(" ", "_")
                     organism_names.append(organism_name)
 
