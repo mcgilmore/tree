@@ -1,4 +1,4 @@
-# tree.py
+# tree.py v0.1
 Helps create phylogenetic tree showing distribution of a protein in bacterial species using [OrthoDB v11](https://www.orthodb.org/) by creating an [iTOL](https://itol.embl.de/)-compatible dataset for visualisation from a given OrthoDB group.
 
 ## Dependencies
