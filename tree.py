@@ -1,4 +1,5 @@
-#tree.py v0.1
+# tree.py v0.1
+# michael.gilmore@umu.se
 
 import sys
 import subprocess
