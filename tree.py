@@ -15,7 +15,7 @@ class OrthoDBGUI(QMainWindow):
 
         layout = QVBoxLayout()
 
-        label = QLabel("Enter <a href=\"https://www.orthodb.org/\">OrthoDB v11</a> Group ID:")
+        label = QLabel("Enter <a href=\"https://www.orthodb.org/\">OrthoDB v12</a> Group ID:")
         label.setOpenExternalLinks(True)
         layout.addWidget(label)
 
