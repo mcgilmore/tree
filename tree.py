@@ -1,4 +1,4 @@
-# tree.py v0.1
+# tree.py v0.2
 # michael.gilmore@umu.se
 
 import sys
