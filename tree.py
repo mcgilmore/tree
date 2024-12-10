@@ -4,8 +4,17 @@
 import sys
 import subprocess
 import csv
-import re
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QLabel, QPushButton, QLineEdit, QWidget, QFileDialog
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QVBoxLayout,
+    QLabel,
+    QPushButton,
+    QLineEdit,
+    QWidget,
+    QFileDialog,
+)
+
 
 class OrthoDBGUI(QMainWindow):
     def __init__(self):
@@ -15,7 +24,9 @@ class OrthoDBGUI(QMainWindow):
 
         layout = QVBoxLayout()
 
-        label = QLabel("Enter <a href=\"https://www.orthodb.org/\">OrthoDB v12</a> Group ID:")
+        label = QLabel(
+            'Enter <a href="https://www.orthodb.org/">OrthoDB v12</a> Group ID:'
+        )
         label.setOpenExternalLinks(True)
         layout.addWidget(label)
 
@@ -32,8 +43,10 @@ class OrthoDBGUI(QMainWindow):
 
     def run_curl_command(self, curl_command):
         try:
-            result = subprocess.check_output(curl_command, shell=True, stderr=subprocess.STDOUT)
-            return result.decode('utf-8').split("\n", 3)[-1]
+            result = subprocess.check_output(
+                curl_command, shell=True, stderr=subprocess.STDOUT
+            )
+            return result.decode("utf-8").split("\n", 3)[-1]
         except subprocess.CalledProcessError as e:
             print(f"Error executing curl command: {e.output.decode('utf-8')}")
             return None
@@ -41,7 +54,9 @@ class OrthoDBGUI(QMainWindow):
     def retrieve_organism_names(self):
         group_id = self.text_edit.text().strip()
 
-        curl_command = f'curl -X GET "https://data.orthodb.org/current/tab?id={group_id}"'
+        curl_command = (
+            f'curl -X GET "https://data.orthodb.org/current/tab?id={group_id}"'
+        )
         response = self.run_curl_command(curl_command)
 
         if response:
@@ -49,7 +64,7 @@ class OrthoDBGUI(QMainWindow):
             tsv_data = response.split("\n", 3)[-1]
 
             # Parse TSV data
-            reader = csv.reader(tsv_data.splitlines(), delimiter='\t')
+            reader = csv.reader(tsv_data.splitlines(), delimiter="\t")
             next(reader)  # Skip the header row
 
             organism_names = []
@@ -59,9 +74,24 @@ class OrthoDBGUI(QMainWindow):
                     organism_name = organism_name.replace(" ", "_")
                     organism_names.append(organism_name)
 
+            # get rid of duplicates
+            seen = set()
+            organism_names_unique = []
+            for organism in organism_names:
+                if organism not in seen:
+                    organism_names_unique.append(organism)
+                    seen.add(organism)
+            print(seen)
+
             file_dialog = QFileDialog()
             options = QFileDialog.Options()
-            file_path, _ = file_dialog.getSaveFileName(self, "Save iTOL Dataset", "", "Text Files (*.txt)", options=options)
+            file_path, _ = file_dialog.getSaveFileName(
+                self,
+                "Save iTOL Dataset",
+                "",
+                "Text Files (*.txt)",
+                options=options,
+            )
 
             if file_path:
                 with open(file_path, "w") as file:
@@ -73,8 +103,9 @@ class OrthoDBGUI(QMainWindow):
                     file.write("COLOR_MIN\t#00ff00\n")
                     file.write("COLOR_MAX\t#0000ff\n\n")
                     file.write("DATA\n")
-                    for organism_name in organism_names:
+                    for organism_name in organism_names_unique:
                         file.write(f"{organism_name}\t1\n")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
