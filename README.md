@@ -4,8 +4,14 @@ Helps create phylogenetic tree showing distribution of a protein in bacterial sp
 ## Dependencies
 PyQt5: `pip install PyQt5`
 
+## Usage
+`python3 main.py [OrthoDB_group_id]`<br>
+
+ - If group identifier is provided as argument, iTOL dataset will be output to same folder as script.<br>
+ - If no arguments are provided, script will run in GUI mode.
+
 ## Instructions
-1. Using OrthoDB v12, find your protein and the desired phylogenetic level to annotate. Copy the group identifier and paste it into the text box in the tree.py GUI.
+1. Using OrthoDB v12, find your protein and the desired phylogenetic level to annotate. Copy the group identifier and paste it into the text box in the GUI.
 	- For example, the group identifier for GroEL at the Bacteria level is **9766614at2**.
 2. The script will produce an iTOL dataset (.txt). Save it somewhere for uploading to iTOL.
 3. Create an iTOL tree by uploading the included **"OrthoDBv12_tree"** file
