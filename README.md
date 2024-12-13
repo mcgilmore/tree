@@ -5,7 +5,7 @@ Helps create phylogenetic tree showing distribution of a protein in bacterial sp
 PyQt5: `pip install PyQt5` (Optional)
 
 ## Usage
-`python3 tree.py [OrthoDB_group_id]`<br>
+`python3 tree.py [OrthoDB_group_id]`
 
  - If group identifier is provided as argument, iTOL dataset will be output to same folder as script as `[OrthoDB_group_id].txt`.<br>
  - If no arguments are provided, script will run in GUI mode.
