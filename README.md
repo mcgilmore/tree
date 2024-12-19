@@ -1,11 +1,11 @@
 # tree.py v0.2
-Helps create phylogenetic tree showing distribution of a protein in bacterial species using [OrthoDB v12](https://www.orthodb.org/) by creating an [iTOL](https://itol.embl.de/)-compatible dataset for visualisation from a given OrthoDB group.
+Helps create phylogenetic tree showing distribution of a protein using [OrthoDB v12](https://www.orthodb.org/) by creating an [iTOL](https://itol.embl.de/)-compatible dataset for visualisation from a given OrthoDB group.
 
 ## Dependencies
 PyQt5: `pip install PyQt5` (Optional)
 
 ## Usage
-`python3 tree.py [OrthoDB_group_id]`
+`python tree.py [OrthoDB_group_id]`
 
  - If group identifier is provided as argument, iTOL dataset will be output to same folder as script as `[OrthoDB_group_id].txt`.<br>
  - If no arguments are provided, script will run in GUI mode.
