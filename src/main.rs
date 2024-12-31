@@ -5,6 +5,7 @@ use std::collections::HashSet;
 use std::fs;
 use std::fs::File;
 use std::io::{self, Write};
+<<<<<<< HEAD
 use serde::Deserialize;
 use serde_json;
 
@@ -104,6 +105,9 @@ struct BlastResponse {
     orthologs_in_model_organisms: Vec<Ortholog>,
     genes_and_clusters_statistics: GenesAndClustersStatistics,
 }
+=======
+use webbrowser;
+>>>>>>> 0d562a2bcc7c0fbffe81317b9bf14c0c654b5bab
 
 fn fetch_data(group_id: &str) -> Result<String, reqwest::Error> {
     let url = format!("https://data.orthodb.org/current/tab?id={}", group_id);
@@ -177,7 +181,7 @@ fn write_itol(file_path: &str, unique_names: &[String], group_id: Option<&str>) 
 fn main() {
     let matches = Command::new("iTOL Dataset Generator")
         .version("1.0")
-        .author("Your Name <your.email@example.com>")
+        .author("Michael Gilmore <michael_gilmore@live.com>")
         .about("Generates iTOL dataset files from OrthoDB data")
         .arg(
             Arg::new("group_id")
@@ -195,6 +199,13 @@ fn main() {
                 .value_name("FILE"),
         )
         .arg(
+            Arg::new("open-orthodb")
+                .short('d')
+                .long("open-orthodb")
+                .help("Open OrthoDB in the default browser")
+                .action(clap::ArgAction::SetTrue),
+        )
+        .arg(
             Arg::new("blast")
                 .short('b')
                 .long("blast")
@@ -206,6 +217,16 @@ fn main() {
     let group_id = matches.get_one::<String>("group_id");
     let output_file = matches.get_one::<String>("output");
     let blast_file = matches.get_one::<String>("blast");
+    
+    if matches.get_flag("open-orthodb") {
+        if webbrowser::open("https://www.orthodb.org/").is_err() {
+            eprintln!("Could not open OrthoDB in your default browser.");
+            std::process::exit(1);
+        } else {
+            println!("Opened OrthoDB in your browser");
+            return;
+        }
+    }
 
     if let Some(blast_path) = blast_file {
         match fs::read_to_string(blast_path) {
