@@ -1,5 +1,7 @@
 .DS_Store
+/target
 test.txt
 __pycache__
 ideas.md
 Instructions.pdf
+A9CIN5.fasta

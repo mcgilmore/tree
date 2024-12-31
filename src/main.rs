@@ -5,6 +5,105 @@ use std::collections::HashSet;
 use std::fs;
 use std::fs::File;
 use std::io::{self, Write};
+use serde::Deserialize;
+use serde_json;
+
+#[derive(Deserialize, Debug)]
+struct GeneId {
+    id: String,
+    param: String,
+}
+
+#[derive(Deserialize, Debug)]
+struct Interpro {
+    id: String,
+    #[serde(rename = "type")]
+    interpro_type: String,
+    param: String,
+    description: String,
+}
+
+#[derive(Deserialize, Debug)]
+struct GenomicCoordinates {
+    dna_id: String,
+    position: String,
+    chromosome: String,
+    protein_id: String,
+}
+
+#[derive(Deserialize, Debug)]
+struct Gene {
+    aas: String,
+    gene_id: GeneId,
+    interpro: Vec<Interpro>,
+    more_info: bool,
+    description: String,
+    how_much_more_info: i32,
+    genomic_coordinates: GenomicCoordinates,
+}
+
+#[derive(Deserialize, Debug)]
+struct Lca {
+    lca_name: String,
+    lca_tax_id: u32,
+    lca_cluster_id: String,
+}
+
+#[derive(Deserialize, Debug)]
+struct OrthologGene {
+    aas: String,
+    gene_id: GeneId,
+    interpro: Vec<Interpro>,
+    more_info: bool,
+    description: String,
+    how_much_more_info: i32,
+    genomic_coordinates: GenomicCoordinates,
+}
+
+#[derive(Deserialize, Debug)]
+struct Organism {
+    id: String,
+    name: String,
+    #[serde(rename = "type")]
+    organism_type: String,
+    organism_id: String,
+    cluster_or_map: String,
+    #[serde(rename = "tax_definition")]
+    tax_definition: Option<TaxDefinition>,
+}
+
+#[derive(Deserialize, Debug)]
+struct TaxDefinition {
+    strain: Option<String>,
+    organism: String,
+}
+
+#[derive(Deserialize, Debug)]
+struct GenesAndClustersStatistics {
+    clusters_count: u32,
+    total_genes_count: u32,
+    clustered_genes_count: u32,
+}
+
+#[derive(Deserialize, Debug)]
+struct Ortholog {
+    lca: Lca,
+    genes: Vec<OrthologGene>,
+    organism: Organism,
+    genes_and_clusters_statistics: GenesAndClustersStatistics,
+}
+
+#[derive(Deserialize, Debug)]
+struct BlastResponse {
+    gene: Gene,
+    noop: u32,
+    status: String,
+    message: Option<String>,
+    organism: Organism,
+    organism_xref: String,
+    orthologs_in_model_organisms: Vec<Ortholog>,
+    genes_and_clusters_statistics: GenesAndClustersStatistics,
+}
 
 fn fetch_data(group_id: &str) -> Result<String, reqwest::Error> {
     let url = format!("https://data.orthodb.org/current/tab?id={}", group_id);
@@ -21,14 +120,16 @@ fn fetch_data(group_id: &str) -> Result<String, reqwest::Error> {
     }
 }
 
-fn blast_sequence(sequence: &str) -> Result<String, reqwest::Error> {
+fn blast_sequence(sequence: &str) -> Result<BlastResponse, Box<dyn std::error::Error>> {
     let url = format!("https://data.orthodb.org/v12/blast?seq={}", sequence);
     let response = reqwest::blocking::get(&url)?;
 
     if response.status().is_success() {
-        Ok(response.text()?)
+        let json_data = response.text()?;
+        let parsed_response: BlastResponse = serde_json::from_str(&json_data)?;
+        Ok(parsed_response)
     } else {
-        Err(response.error_for_status().unwrap_err())
+        Err(Box::new(response.error_for_status().unwrap_err()))
     }
 }
 
@@ -111,7 +212,7 @@ fn main() {
             Ok(sequence) => {
                 match blast_sequence(&sequence.trim()) {
                     Ok(response) => {
-                        println!("BLAST response: {}", response);
+                        println!("BLAST response: {:#?}", response);
                         // Additional processing of the JSON response can be done here
                     }
                     Err(e) => {
