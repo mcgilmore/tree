@@ -1,13 +1,13 @@
 use clap::{Arg, Command};
 use csv::ReaderBuilder;
 use reqwest;
+use serde::Deserialize;
+use serde_json;
 use std::collections::HashSet;
 use std::fs;
 use std::fs::File;
 use std::io::{self, Write};
-<<<<<<< HEAD
-use serde::Deserialize;
-use serde_json;
+use webbrowser;
 
 #[derive(Deserialize, Debug)]
 struct GeneId {
@@ -105,9 +105,6 @@ struct BlastResponse {
     orthologs_in_model_organisms: Vec<Ortholog>,
     genes_and_clusters_statistics: GenesAndClustersStatistics,
 }
-=======
-use webbrowser;
->>>>>>> 0d562a2bcc7c0fbffe81317b9bf14c0c654b5bab
 
 fn fetch_data(group_id: &str) -> Result<String, reqwest::Error> {
     let url = format!("https://data.orthodb.org/current/tab?id={}", group_id);
@@ -217,7 +214,7 @@ fn main() {
     let group_id = matches.get_one::<String>("group_id");
     let output_file = matches.get_one::<String>("output");
     let blast_file = matches.get_one::<String>("blast");
-    
+
     if matches.get_flag("open-orthodb") {
         if webbrowser::open("https://www.orthodb.org/").is_err() {
             eprintln!("Could not open OrthoDB in your default browser.");
