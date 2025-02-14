@@ -17,7 +17,6 @@ PyQt5: `pip install PyQt5` (Optional)
 3. Create an iTOL tree by uploading the included **"OrthoDBv12_tree"** file
 4. Open the tree, and navigate to the "Datasets" tab. Select "Upload annotation file" and navigate to the dataset file created by the script. Upload it.
 5. Adjust the tree and aesthetics to your preferences.
-6. Publish in **Nature**, **Science** or **Cell**.
 
 ## Notes
 - Tree is a little more limited than the full selection of species on OrthoDB. This happens because not every species has an NCBI taxonomy ID, so PhyloT will not include those on the tree. As a result there are some errors on importing the tree into iTOL, but these shouldn't result in an undue gap in the dataset coverage.
